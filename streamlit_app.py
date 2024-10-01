@@ -37,23 +37,23 @@ filtered_df = df[df['Category'] == category_selected]
 st.write("### (2) add a multi-select for Sub_Category *in the selected Category (1)* (https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)")
 sub_category_selected = st.multiselect("Select Sub-Category", filtered_df['Sub-Category'].unique())
 if sub_category_selected:
-    filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
+filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
   
 st.write("### (3) show a line chart of sales for the selected items in (2)")
 if not filtered_df.empty:
-    sales_by_month_filtered = filtered_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
-    st.line_chart(sales_by_month_filtered, y="Sales")
+sales_by_month_filtered = filtered_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
+st.line_chart(sales_by_month_filtered, y="Sales")
 
 
 st.write("### (4) show three metrics (https://docs.streamlit.io/library/api-reference/data/st.metric) for the selected items in (2): total sales, total profit, and overall profit margin (%)")
 if not filtered_df.empty:
-    total_sales = filtered_df['Sales'].sum()
-    total_profit = filtered_df['Profit'].sum()
-    profit_margin = (total_profit / total_sales) * 100 if total_sales != 0 else 0
+total_sales = filtered_df['Sales'].sum()
+total_profit = filtered_df['Profit'].sum()
+profit_margin = (total_profit / total_sales) * 100 if total_sales != 0 else 0
 
-    st.metric("Total Sales", f"${total_sales:,.2f}")
-    st.metric("Total Profit", f"${total_profit:,.2f}")
-    st.metric("Profit Margin (%)", f"{profit_margin:.2f}%")
+st.metric("Total Sales", f"${total_sales:,.2f}")
+st.metric("Total Profit", f"${total_profit:,.2f}")
+st.metric("Profit Margin (%)", f"{profit_margin:.2f}%")
   
 st.write("### (5) use the delta option in the overall profit margin metric to show the difference between the overall average profit margin (all products across all categories)")
 overall_sales = df['Sales'].sum()
