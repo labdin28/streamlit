@@ -43,7 +43,8 @@ if sub_category_selected:
 
 st.write("### (3) show a line chart of sales for the selected items in (2)")
 if not filtered_df.empty:
-  sales_by_month_filtered = filtered_df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
+  filtered_df_with_date_index = filtered_df.set_index('Order_Date')
+  sales_by_month_filtered = filtered_df_with_date_index.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
   st.line_chart(sales_by_month_filtered, y="Sales")
 
 
@@ -56,6 +57,7 @@ if not filtered_df.empty:
 st.metric("Total Sales", f"${total_sales:,.2f}")
 st.metric("Total Profit", f"${total_profit:,.2f}")
 st.metric("Profit Margin (%)", f"{profit_margin:.2f}%")
+
   
 st.write("### (5) use the delta option in the overall profit margin metric to show the difference between the overall average profit margin (all products across all categories)")
 overall_sales = df['Sales'].sum()
