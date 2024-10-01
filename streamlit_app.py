@@ -37,7 +37,7 @@ filtered_df = df[df['Category'] == category_selected]
 st.write("### (2) add a multi-select for Sub_Category *in the selected Category (1)* (https://docs.streamlit.io/library/api-reference/widgets/st.multiselect)")
 sub_category_selected = st.multiselect("Select Sub-Category", filtered_df['Sub-Category'].unique())
 if sub_category_selected:
-filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
+  filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
   
 st.write("### (3) show a line chart of sales for the selected items in (2)")
 if not filtered_df.empty:
