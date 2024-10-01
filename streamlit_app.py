@@ -61,4 +61,4 @@ overall_profit = df['Profit'].sum()
 overall_profit_margin = (overall_profit / overall_sales) * 100 if overall_sales != 0 else 0
 profit_margin_delta = profit_margin - overall_profit_margin
 
-    st.metric("Overall Profit Margin (%)", f"{profit_margin:.2f}%", delta=f"{profit_margin_delta:.2f}%")
+st.metric("Overall Profit Margin (%)", f"{profit_margin:.2f}%", delta=f"{profit_margin_delta:.2f}%")
