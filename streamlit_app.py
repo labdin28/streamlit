@@ -28,51 +28,55 @@ st.line_chart(sales_by_month, y="Sales")
 st.write("## Your additions")
 
 # (1) Dropdown for Category selection
-category_selected = st.selectbox("Select a Category", df['Category'].unique())
+if 'category' in df.columns:
+    category_selected = st.selectbox("Select a Category", df['category'].unique())
 
 # Filter dataframe based on selected category
-filtered_df = df[df['Category'] == category_selected]
-
+filtered_df = df[df['category'] == category_selected]
 
 # (2) Multi-select for Sub-Category within the selected Category
-sub_category_options = filtered_df['Sub-Category'].unique() if not filtered_df.empty else []
-selected_sub_categories = st.multiselect(
-    "Select one or more sub-categories:",
-    sub_category_options,
-    default=None,
-    placeholder="Choose one or more sub-categories"
-)
+if not filtered_df.empty and 'sub-category' in filtered_df.columns:
+    sub_category_options = filtered_df['sub-category'].unique()
+    selected_sub_categories = st.multiselect(
+        "Select one or more sub-categories:",
+        sub_category_options,
+        default=None,
+        placeholder="Choose one or more sub-categories"
+    )
 
 # Further filter based on selected sub-categories
 if selected_sub_categories:
-    filtered_df = filtered_df[filtered_df['Sub-Category'].isin(selected_sub_categories)]
+    filtered_df = filtered_df[filtered_df['sub-category'].isin(selected_sub_categories)]
 
 # Display the selected options without showing any filtered DataFrame
 st.write("You selected the Category:", category_selected)
 st.write("You selected the Sub-Categories:", selected_sub_categories)
 
-
-# (3) Line chart of sales for the selected items
-if not filtered_df.empty:
-    filtered_df_with_date_index = filtered_df.set_index('Order_Date')
-    sales_by_month_filtered = filtered_df_with_date_index.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
-    st.line_chart(sales_by_month_filtered, y="Sales")
-
-# (4) Metrics for the selected items: total sales, total profit, and overall profit margin (%)
-if not filtered_df.empty:
-    total_sales = filtered_df['Sales'].sum()
-    total_profit = filtered_df['Profit'].sum()
+# (3) Display Metrics for the filtered selection
+if not filtered_df.empty and 'sales' in filtered_df.columns and 'profit' in filtered_df.columns:
+    total_sales = filtered_df['sales'].sum()
+    total_profit = filtered_df['profit'].sum()
     profit_margin = (total_profit / total_sales) * 100 if total_sales != 0 else 0
 
-    st.metric("Total Sales", f"${total_sales:,.2f}")
-    st.metric("Total Profit", f"${total_profit:,.2f}")
-    st.metric("Profit Margin (%)", f"{profit_margin:.2f}%")
+st.write("### Metrics for Selected Categories and Sub-Categories")
+st.metric("Total Sales", f"${total_sales:,.2f}")
+st.metric("Total Profit", f"${total_profit:,.2f}")
+st.metric("Profit Margin (%)", f"{profit_margin:.2f}%")
 
-# (5) Delta option for profit margin
-if not filtered_df.empty:
-    overall_sales = df['Sales'].sum()
-    overall_profit = df['Profit'].sum()
-    overall_profit_margin = (overall_profit / overall_sales) * 100 if overall_sales != 0 else 0
-    profit_margin_delta = profit_margin - overall_profit_margin
+# (4) Aggregated sales by month for selected categories and sub-categories
+filtered_df_with_date_index = filtered_df.set_index('order_date')
+sales_by_month_filtered = filtered_df_with_date_index['sales'].groupby(pd.Grouper(freq='M')).sum()
+st.write("### Sales by Month for Selected Categories and Sub-Categories")
+st.line_chart(sales_by_month_filtered)
 
-    st.metric("Overall Profit Margin (%)", f"{profit_margin:.2f}%", delta=f"{profit_margin_delta:.2f}%")
+# (5) Delta for profit margin compared to overall profit margin
+overall_sales = df['sales'].sum()
+overall_profit = df['profit'].sum()
+overall_profit_margin = (overall_profit / overall_sales) * 100 if overall_sales != 0 else 0
+profit_margin_delta = profit_margin - overall_profit_margin
+
+st.metric("Overall Profit Margin (%)", f"{profit_margin:.2f}%", delta=f"{profit_margin_delta:.2f}%")
+else:
+st.write("No data available for the selected sub-categories.")
+else:
+st.write("Category column not found in the data.")
