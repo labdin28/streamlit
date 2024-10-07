@@ -35,20 +35,22 @@ filtered_df = df[df['Category'] == category_selected]
 
 
 # (2) Multi-select for Sub-Category within the selected Category
-if not filtered_df.empty and 'Sub-Category' in filtered_df.columns:
-    sub_category_selected = st.multiselect(
-        "Select Sub-Category",
-        options=filtered_df['Sub-Category'].unique(),
-        default=None,
-        placeholder="Choose one or more sub-categories"
-    )
+options = st.multiselect(
+    "Select one or more categories:",
+    df['Category'].unique(),  
+    default=None,  
+    placeholder="Choose one or more options"
+)
 
-    # Display the selected options
-    st.write("You selected Sub-Categories:", sub_category_selected)
+# Display the selected options
+st.write("You selected:", options)
 
-    # Filter dataframe based on selected sub-categories
-    if sub_category_selected:
-        filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
+if options:
+    filtered_df = df[df['Category'].isin(options)]
+    st.write("Filtered Data:")
+    st.dataframe(filtered_df)
+else:
+    st.write("Please select one or more options to filter the data.")
         
 # (3) Line chart of sales for the selected items
 if not filtered_df.empty:
