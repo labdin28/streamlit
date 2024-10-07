@@ -33,9 +33,6 @@ category_selected = st.selectbox("Select a Category", df['Category'].unique())
 # Filter dataframe based on selected category
 filtered_df = df[df['Category'] == category_selected]
 
-# Debug: Show filtered DataFrame after Category selection
-st.write("Filtered DataFrame after selecting Category:")
-st.dataframe(filtered_df)
 
 # (2) Multi-select for Sub-Category within the selected Category
 if not filtered_df.empty and 'Sub-Category' in filtered_df.columns:
@@ -46,14 +43,13 @@ if not filtered_df.empty and 'Sub-Category' in filtered_df.columns:
         placeholder="Choose one or more sub-categories"
     )
 
+    # Display the selected options
+    st.write("You selected Sub-Categories:", sub_category_selected)
+
     # Filter dataframe based on selected sub-categories
     if sub_category_selected:
         filtered_df = filtered_df[filtered_df['Sub-Category'].isin(sub_category_selected)]
-
-# Debug: Show filtered DataFrame after Sub-Category selection
-st.write("Filtered DataFrame after selecting Sub-Category:")
-st.dataframe(filtered_df)
-
+        
 # (3) Line chart of sales for the selected items
 if not filtered_df.empty:
     filtered_df_with_date_index = filtered_df.set_index('Order_Date')
