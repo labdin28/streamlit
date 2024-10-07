@@ -76,7 +76,7 @@ overall_profit_margin = (overall_profit / overall_sales) * 100 if overall_sales 
 profit_margin_delta = profit_margin - overall_profit_margin
 
 st.metric("Overall Profit Margin (%)", f"{profit_margin:.2f}%", delta=f"{profit_margin_delta:.2f}%")
-    else:
+else:
 st.write("No data available for the selected sub-categories.")
-    else:
+else:
 st.write("Category column not found in the data.")
