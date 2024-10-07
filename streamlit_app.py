@@ -37,21 +37,14 @@ filtered_df = df[df['Category'] == category_selected]
 # (2) Multi-select for Sub-Category within the selected Category
 options = st.multiselect(
     "Select one or more categories:",
-    df['Category'].unique(),  
+    df['Category'].unique(), 
     default=None,  
     placeholder="Choose one or more options"
 )
 
-# Display the selected options
+# Display the selected options without showing any filtered DataFrame
 st.write("You selected:", options)
 
-if options:
-    filtered_df = df[df['Category'].isin(options)]
-    st.write("Filtered Data:")
-    st.dataframe(filtered_df)
-else:
-    st.write("Please select one or more options to filter the data.")
-        
 # (3) Line chart of sales for the selected items
 if not filtered_df.empty:
     filtered_df_with_date_index = filtered_df.set_index('Order_Date')
