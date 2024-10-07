@@ -38,7 +38,7 @@ st.write("Filtered DataFrame after selecting Category:")
 st.dataframe(filtered_df)
 
 # (2) Multi-select for Sub-Category within the selected Category
-if not filtered_df.empty:
+if not filtered_df.empty and 'Sub-Category' in filtered_df.columns:
     sub_category_selected = st.multiselect(
         "Select Sub-Category",
         options=filtered_df['Sub-Category'].unique(),
